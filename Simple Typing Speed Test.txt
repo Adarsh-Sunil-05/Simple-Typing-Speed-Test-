@@ -1,0 +1,91 @@
+import java.util.Random;
+import java.util.Scanner;
+
+public class TypingSpeedTest {
+
+    public static void main(String[] args) {
+        // List of sample sentences for the test
+        String[] sentences = {
+            "The quick brown fox jumps over the lazy dog.",
+            "Practice makes perfect.",
+            "Java programming is fun and challenging.",
+            "Keep calm and code on!"
+        };
+
+        // Select a random sentence from the list
+        Random random = new Random();
+        String testSentence = sentences[random.nextInt(sentences.length)];
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Welcome to the Simple Typing Speed Test!");
+        System.out.println("\nType the following sentence as fast and accurately as you can:");
+        System.out.println("---------------------------------------------------------");
+        System.out.println(testSentence);
+        System.out.println("---------------------------------------------------------");
+
+        // Wait for the user to be ready
+        System.out.println("\nPress Enter when you're ready to start...");
+        scanner.nextLine();
+
+        // Start timing and capture user input
+        System.out.println("Start typing below and press Enter when done:");
+        long startTime = System.currentTimeMillis();
+        String userInput = scanner.nextLine();
+        long endTime = System.currentTimeMillis();
+
+        // Calculate time taken in seconds and minutes
+        long timeTakenMillis = endTime - startTime;
+        double timeTakenSeconds = timeTakenMillis / 1000.0;
+        double timeTakenMinutes = timeTakenSeconds / 60.0;
+
+        // Calculate Words Per Minute (WPM)
+        // We'll assume the test sentence defines the expected number of words
+        int wordCount = testSentence.split("\\s+").length;
+        double wpm = wordCount / timeTakenMinutes;
+
+        // Calculate typing accuracy based on character errors
+        int errors = calculateErrors(testSentence, userInput);
+        double accuracy = ((double) (testSentence.length() - errors) / testSentence.length()) * 100;
+
+        // Display results to the user
+        System.out.println("\n--- Results ---");
+        System.out.printf("Time taken: %.2f seconds\n", timeTakenSeconds);
+        System.out.printf("Words per minute (WPM): %.2f\n", wpm);
+        System.out.printf("Number of errors: %d\n", errors);
+        System.out.printf("Accuracy: %.2f%%\n", accuracy);
+
+        // Optionally, you can add motivational messages based on performance.
+        if (accuracy == 100) {
+            System.out.println("Excellent work! Perfect typing!");
+        } else if (accuracy >= 90) {
+            System.out.println("Great job! Just a few mistakes.");
+        } else {
+            System.out.println("Keep practicing to improve your accuracy!");
+        }
+        
+        // Close the scanner
+        scanner.close();
+    }
+
+    /**
+     * Compares the original sentence with the user input character by character
+     * and returns the total number of mismatches as errors.
+     *
+     * @param original the original sentence to be typed
+     * @param input the user input
+     * @return number of errors (mismatches)
+     */
+    public static int calculateErrors(String original, String input) {
+        int errors = 0;
+        int maxLength = Math.max(original.length(), input.length());
+        for (int i = 0; i < maxLength; i++) {
+            char origChar = i < original.length() ? original.charAt(i) : ' ';
+            char inputChar = i < input.length() ? input.charAt(i) : ' ';
+            if (origChar != inputChar) {
+                errors++;
+            }
+        }
+        return errors;
+    }
+}
